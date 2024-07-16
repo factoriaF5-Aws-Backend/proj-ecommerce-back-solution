@@ -4,11 +4,11 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import org.springframework.aot.generate.GeneratedTypeReference;
+import lombok.AllArgsConstructor;
 
-import java.text.DecimalFormat;
 
 @Entity
+@AllArgsConstructor
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,4 +38,5 @@ public class Product {
     public Double getPrice() {
         return price;
     }
+
 }
