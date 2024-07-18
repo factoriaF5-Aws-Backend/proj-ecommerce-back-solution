@@ -11,7 +11,9 @@ public class ProductService {
         this.productRepo = productRepo;
     }
 
-    public Product saveProduct(Product product) {
+    public Product saveProduct(ProductRequest productRequest){
+        Product product = new Product(productRequest.name(), productRequest.description(), productRequest.price());
+
         return productRepo.save(product);
     }
 }
