@@ -1,10 +1,9 @@
 package com.factoriaf5.ecommerceManager.products;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/products")
@@ -20,6 +19,12 @@ public class ProductController {
     public ResponseEntity<Product> createProduct(@RequestBody ProductRequest productRequest) {
         Product savedProduct = productService.saveProduct(productRequest);
         return ResponseEntity.status(201).body(savedProduct);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Product>> listProducts(){
+        List<Product> listOfProducts = productService.getAllProducts();
+        return ResponseEntity.status(200).body(listOfProducts);
     }
 
 

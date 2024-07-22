@@ -30,6 +30,10 @@ public class Product {
         this.id = id;
     }
 
+    //Hibernate error
+    public Product() {
+    }
+
     public Long getId() {
         return id;
     }
