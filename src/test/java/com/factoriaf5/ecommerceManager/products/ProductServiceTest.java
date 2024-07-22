@@ -7,6 +7,8 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -17,7 +19,7 @@ class ProductServiceTest {
     ProductRepo productRepo;
 
     @Test
-    void testCreateProduct(){
+    void testCreateProduct() {
         ProductService productService = new ProductService(productRepo);
         ProductRequest productRequest = new ProductRequest("test", "test", 1.0);
         Product savedProduct = new Product(1L, "test", "test", 1.0);
@@ -47,7 +49,19 @@ class ProductServiceTest {
         verify(productRepo, Mockito.never()).save(any(Product.class));
     }
 
+    @Test
+    void testThatListOfProductCanBeRetrieved() {
+        ProductService productService = new ProductService(productRepo);
+        Product savedProduct = new Product(1L, "test", "test", 1.0);
 
+        List<Product> listOfProducts = List.of(savedProduct);
+
+        Mockito.when(productRepo.findAll()).thenReturn(listOfProducts);
+        List<Product> productResponse = productService.getAllProducts();
+
+        assertEquals(listOfProducts, productResponse);
+
+    }
 
 
 }

@@ -2,6 +2,8 @@ package com.factoriaf5.ecommerceManager.products;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductService {
 
@@ -15,5 +17,9 @@ public class ProductService {
         Product product = new Product(productRequest.name(), productRequest.description(), productRequest.price());
 
         return productRepo.save(product);
+    }
+
+    public List<Product> getAllProducts() {
+        return productRepo.findAll();
     }
 }
