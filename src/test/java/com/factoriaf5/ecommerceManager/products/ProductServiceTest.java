@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -61,6 +62,19 @@ class ProductServiceTest {
 
         assertEquals(listOfProducts, productResponse);
 
+    }
+
+    @Test
+    void testAProductCanBeRetrievedById(){
+        ProductService productService = new ProductService(productRepo);
+        Product savedProduct = new Product(1L, "test", "test", 1.0);
+
+        Mockito.when(productRepo.findById(1L)).thenReturn(Optional.of(savedProduct));
+        Optional<Product> productResponse = productService.findProduct(1L);
+
+        assertTrue(productResponse.isPresent());
+
+        assertEquals(savedProduct, productResponse.get());
     }
 
 
