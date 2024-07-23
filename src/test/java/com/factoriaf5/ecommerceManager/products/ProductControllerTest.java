@@ -71,4 +71,18 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$[0].price").value(10.0));
     }
 
+    @Test
+    void findAProduct() throws Exception {
+        productRepo.save(
+                new Product("name", "description", 10.0)
+        );
+        mockMvc.perform(get("/api/products/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(1))
+                .andExpect(jsonPath("name").value("name"))
+                .andExpect(jsonPath("description").value("description"))
+                .andExpect(jsonPath("price").value(10.0));
+    }
+
 }

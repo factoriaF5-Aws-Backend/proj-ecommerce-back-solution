@@ -3,6 +3,7 @@ package com.factoriaf5.ecommerceManager.products;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductService {
@@ -13,7 +14,7 @@ public class ProductService {
         this.productRepo = productRepo;
     }
 
-    public Product saveProduct(ProductRequest productRequest){
+    public Product saveProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.name(), productRequest.description(), productRequest.price());
 
         return productRepo.save(product);
@@ -21,5 +22,13 @@ public class ProductService {
 
     public List<Product> getAllProducts() {
         return productRepo.findAll();
+    }
+
+    public Product findProduct(long id) {
+        Optional<Product> returnedProduct = productRepo.findById(id);
+        if (returnedProduct.isEmpty()) {
+            throw new ProductNotFoundException("The product with id: " + id + " is not found");
+        }
+        return returnedProduct.get();
     }
 }

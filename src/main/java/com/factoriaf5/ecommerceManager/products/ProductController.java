@@ -22,9 +22,15 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Product>> listProducts(){
+    public ResponseEntity<List<Product>> listProducts() {
         List<Product> listOfProducts = productService.getAllProducts();
         return ResponseEntity.status(200).body(listOfProducts);
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<Product> findProduct(@PathVariable Long id) {
+        Product returnedProduct = productService.findProduct(id);
+        return ResponseEntity.status(200).body(returnedProduct);
     }
 
 
