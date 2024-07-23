@@ -89,5 +89,13 @@ class ProductServiceTest {
         verify(productRepo, Mockito.times(1)).findById(any(Long.class));
     }
 
+    @Test
+    void testAProductCanBeDeletedUsingId() {
+        productService.deleteProduct(1L);
+
+        verify(productRepo, Mockito.times(1)).deleteById(1L);
+    }
+
+
 
 }

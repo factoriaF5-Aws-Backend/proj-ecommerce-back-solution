@@ -57,6 +57,7 @@ class ProductControllerTest {
                 .andExpect(status().isNotAcceptable())
                 .andExpect(result -> assertEquals("The price must be positive", result.getResolvedException().getMessage()));
     }
+
     @Test
     void listAllProducts() throws Exception {
         productRepo.save(
@@ -83,6 +84,19 @@ class ProductControllerTest {
                 .andExpect(jsonPath("name").value("name"))
                 .andExpect(jsonPath("description").value("description"))
                 .andExpect(jsonPath("price").value(10.0));
+    }
+
+    @Test
+    void deleteAProduct() throws Exception {
+        productRepo.save(
+                new Product("name", "description", 10.0)
+        );
+        assertEquals(1, productRepo.count());
+        mockMvc.perform(delete("/api/products/1")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        assertEquals(0, productRepo.count());
     }
 
 }
