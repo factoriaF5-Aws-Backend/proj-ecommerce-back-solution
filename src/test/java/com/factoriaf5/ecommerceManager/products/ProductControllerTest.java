@@ -99,4 +99,24 @@ class ProductControllerTest {
         assertEquals(0, productRepo.count());
     }
 
+    @Test
+    void updateAProduct() throws Exception {
+        productRepo.save(
+                new Product("name", "description", 10.0)
+        );
+
+        ProductRequest productRequest;
+        productRequest = new ProductRequest("updated name", "updated description", 1.0);
+
+        String jsonProductRequest = objectMapper.writeValueAsString(productRequest);
+
+        mockMvc.perform(put("/api/products/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(jsonProductRequest))
+                .andExpect(jsonPath("id").value(1))
+                .andExpect(jsonPath("name").value("updated name"))
+                .andExpect(jsonPath("description").value("updated description"))
+                .andExpect(jsonPath("price").value(1.0));
+    }
+
 }
