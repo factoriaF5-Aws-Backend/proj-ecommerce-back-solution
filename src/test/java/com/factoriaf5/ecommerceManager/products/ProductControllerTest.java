@@ -31,7 +31,7 @@ class ProductControllerTest {
     void createProduct() throws Exception {
         //1. create a request we need to pass to the controller
         ProductRequest productRequest;
-        productRequest = new ProductRequest("name", "description", 10.0);
+        productRequest = new ProductRequest("name", "description", 10.0, true);
         //2. transform to string using ObjectMapper
         String jsonProductRequest = objectMapper.writeValueAsString(productRequest);
         //3. use it in mockMvc.content
@@ -43,13 +43,14 @@ class ProductControllerTest {
                 .andExpect(jsonPath("id").value(1))
                 .andExpect(jsonPath("name").value("name"))
                 .andExpect(jsonPath("description").value("description"))
-                .andExpect(jsonPath("price").value(10.0));
+                .andExpect(jsonPath("price").value(10.0))
+                .andExpect(jsonPath("featured").value(true));
     }
 
     @Test
     void negativePriceCanNotBeAccepted() throws Exception {
         ProductRequest productRequest;
-        productRequest = new ProductRequest("name", "description", -10.0);
+        productRequest = new ProductRequest("name", "description", -10.0, true);
         String jsonProductRequest = objectMapper.writeValueAsString(productRequest);
         mockMvc.perform(post("/api/products")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -61,7 +62,7 @@ class ProductControllerTest {
     @Test
     void listAllProducts() throws Exception {
         productRepo.save(
-                new Product("name", "description", 10.0)
+                new Product("name", "description", 10.0, true)
         );
         mockMvc.perform(get("/api/products")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -69,13 +70,14 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].name").value("name"))
                 .andExpect(jsonPath("$[0].description").value("description"))
-                .andExpect(jsonPath("$[0].price").value(10.0));
+                .andExpect(jsonPath("$[0].price").value(10.0))
+                .andExpect(jsonPath("$[0].featured").value(true));
     }
 
     @Test
     void findAProduct() throws Exception {
         productRepo.save(
-                new Product("name", "description", 10.0)
+                new Product("name", "description", 10.0, true)
         );
         mockMvc.perform(get("/api/products/1")
                         .contentType(MediaType.APPLICATION_JSON))
@@ -83,13 +85,14 @@ class ProductControllerTest {
                 .andExpect(jsonPath("id").value(1))
                 .andExpect(jsonPath("name").value("name"))
                 .andExpect(jsonPath("description").value("description"))
-                .andExpect(jsonPath("price").value(10.0));
+                .andExpect(jsonPath("price").value(10.0))
+                .andExpect(jsonPath("featured").value(true));
     }
 
     @Test
     void deleteAProduct() throws Exception {
         productRepo.save(
-                new Product("name", "description", 10.0)
+                new Product("name", "description", 10.0,true)
         );
         assertEquals(1, productRepo.count());
         mockMvc.perform(delete("/api/products/1")
@@ -102,11 +105,11 @@ class ProductControllerTest {
     @Test
     void updateAProduct() throws Exception {
         productRepo.save(
-                new Product("name", "description", 10.0)
+                new Product("name", "description", 10.0, true)
         );
 
         ProductRequest productRequest;
-        productRequest = new ProductRequest("updated name", "updated description", 1.0);
+        productRequest = new ProductRequest("updated name", "updated description", 1.0, true);
 
         String jsonProductRequest = objectMapper.writeValueAsString(productRequest);
 
@@ -116,7 +119,8 @@ class ProductControllerTest {
                 .andExpect(jsonPath("id").value(1))
                 .andExpect(jsonPath("name").value("updated name"))
                 .andExpect(jsonPath("description").value("updated description"))
-                .andExpect(jsonPath("price").value(1.0));
+                .andExpect(jsonPath("price").value(1.0))
+                .andExpect(jsonPath("featured").value(true));
     }
 
 }
