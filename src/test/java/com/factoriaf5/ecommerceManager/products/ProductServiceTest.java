@@ -96,6 +96,24 @@ class ProductServiceTest {
         verify(productRepo, Mockito.times(1)).deleteById(1L);
     }
 
+    @Test
+    void testAProductCanBeUpdated(){
+        Product savedProduct = new Product(1L, "test", "test", 1.0);
+
+        ProductRequest productRequest = new ProductRequest("updated", "updated", 2.0);
+
+        Mockito.when(productRepo.findById(1L)).thenReturn(Optional.of(savedProduct));
+        Mockito.when(productRepo.save(any(Product.class))).thenReturn(savedProduct);
+
+        Optional<Product> optionalProduct = productService.updateProduct(productRequest, 1L);
+
+        assertTrue(optionalProduct.isPresent());
+        Product updatedProduct = optionalProduct.get();
+        assertEquals("updated", updatedProduct.getName());
+        assertEquals("updated", updatedProduct.getDescription());
+        assertEquals(2.0, updatedProduct.getPrice());
+    }
+
 
 
 }
