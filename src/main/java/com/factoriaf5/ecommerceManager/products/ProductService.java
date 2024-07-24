@@ -15,7 +15,7 @@ public class ProductService {
     }
 
     public Product saveProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.name(), productRequest.description(), productRequest.price());
+        Product product = new Product(productRequest.name(), productRequest.description(), productRequest.price(), productRequest.featured());
 
         return productRepo.save(product);
     }
@@ -47,6 +47,7 @@ public class ProductService {
         updatedProduct.setName(productRequest.name());
         updatedProduct.setDescription(productRequest.description());
         updatedProduct.setPrice(productRequest.price());
+        updatedProduct.setFeatured(productRequest.featured());
 
         return Optional.of(productRepo.save(updatedProduct));
     }

@@ -26,8 +26,8 @@ class ProductServiceTest {
 
     @Test
     void testCreateProduct() {
-        ProductRequest productRequest = new ProductRequest("test", "test", 1.0);
-        Product savedProduct = new Product(1L, "test", "test", 1.0);
+        ProductRequest productRequest = new ProductRequest("test", "test", 1.0, true);
+        Product savedProduct = new Product(1L, "test", "test", 1.0, true);
 
         Mockito.when(productRepo.save(any(Product.class))).thenReturn(savedProduct);
         Product productResponse = productService.saveProduct(productRequest);
@@ -36,13 +36,14 @@ class ProductServiceTest {
         assertEquals(productRequest.name(), productResponse.getName());
         assertEquals(productRequest.price(), productResponse.getPrice());
         assertEquals(productRequest.description(), productResponse.getDescription());
+        assertEquals(productRequest.featured(), productResponse.getFeatured());
 
         verify(productRepo).save(any(Product.class));
     }
 
     @Test
     void testThatPriceCanNotBeNegative() {
-        ProductRequest productRequest = new ProductRequest("test", "test", -1.0);
+        ProductRequest productRequest = new ProductRequest("test", "test", -1.0, true);
 
         Exception exception = assertThrows(NegativePriceException.class, () -> productService.saveProduct(productRequest));
 
@@ -55,7 +56,7 @@ class ProductServiceTest {
 
     @Test
     void testThatListOfProductCanBeRetrieved() {
-        Product savedProduct = new Product(1L, "test", "test", 1.0);
+        Product savedProduct = new Product(1L, "test", "test", 1.0, true);
 
         List<Product> listOfProducts = List.of(savedProduct);
 
@@ -68,7 +69,7 @@ class ProductServiceTest {
 
     @Test
     void testAProductCanBeRetrievedById() {
-        Product savedProduct = new Product(1L, "test", "test", 1.0);
+        Product savedProduct = new Product(1L, "test", "test", 1.0, true);
 
         Mockito.when(productRepo.findById(1L)).thenReturn(Optional.of(savedProduct));
         Product productResponse = productService.findProduct(1L);
@@ -98,9 +99,9 @@ class ProductServiceTest {
 
     @Test
     void testAProductCanBeUpdated(){
-        Product savedProduct = new Product(1L, "test", "test", 1.0);
+        Product savedProduct = new Product(1L, "test", "test", 1.0, true);
 
-        ProductRequest productRequest = new ProductRequest("updated", "updated", 2.0);
+        ProductRequest productRequest = new ProductRequest("updated", "updated", 2.0, false);
 
         Mockito.when(productRepo.findById(1L)).thenReturn(Optional.of(savedProduct));
         Mockito.when(productRepo.save(any(Product.class))).thenReturn(savedProduct);
@@ -112,6 +113,7 @@ class ProductServiceTest {
         assertEquals("updated", updatedProduct.getName());
         assertEquals("updated", updatedProduct.getDescription());
         assertEquals(2.0, updatedProduct.getPrice());
+        assertEquals(false, updatedProduct.getFeatured());
     }
 
 

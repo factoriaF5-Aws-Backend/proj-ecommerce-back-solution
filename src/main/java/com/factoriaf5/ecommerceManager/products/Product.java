@@ -14,18 +14,20 @@ public class Product {
     private String name;
     private String description;
     private Double price;
+    private Boolean featured = false;
 
-    public Product(String name, String description, Double price) {
+    public Product(String name, String description, Double price, Boolean featured) {
         this.name = name;
         this.description = description;
         if (price < 0) {
             throw new NegativePriceException("The price must be positive");
         }
         this.price = price;
+        this.featured = featured;
     }
 
-    public Product(Long id, String name, String description, Double price) {
-        this(name, description, price);
+    public Product(Long id, String name, String description, Double price, Boolean featured) {
+        this(name, description, price, featured);
         this.id = id;
     }
 
@@ -45,6 +47,14 @@ public class Product {
         return description;
     }
 
+    public Double getPrice() {
+        return price;
+    }
+
+    public Boolean getFeatured() {
+        return featured;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -57,8 +67,9 @@ public class Product {
         this.price = price;
     }
 
-    public Double getPrice() {
-        return price;
+    public void setFeatured(Boolean featured) {
+        this.featured = featured;
     }
+
 
 }
