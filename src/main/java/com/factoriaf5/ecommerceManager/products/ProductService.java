@@ -14,7 +14,7 @@ public class ProductService {
         this.productRepo = productRepo;
     }
 
-    public Product saveProduct(ProductRequest productRequest){
+    public Product saveProduct(ProductRequest productRequest) {
         Product product = new Product(productRequest.name(), productRequest.description(), productRequest.price());
 
         return productRepo.save(product);
@@ -24,12 +24,16 @@ public class ProductService {
         return productRepo.findAll();
     }
 
-    public Optional<Product> findProduct(long id) {
-        return productRepo.findById(id);
+
+    public Product findProduct(long id) {
+        Optional<Product> returnedProduct = productRepo.findById(id);
+        if (returnedProduct.isEmpty()) {
+            throw new ProductNotFoundException("The product with id: " + id + " is not found");
+        }
+        return returnedProduct.get();
     }
 
-    public Optional<Product> updateProduct(ProductRequest productRequest, Long id) {
-        Optional<Product> updatedProduct = productRepo.findById(id);
-        return null;
+    public void deleteProduct(Long id) {
+        productRepo.deleteById(id);
     }
 }
