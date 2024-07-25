@@ -3,6 +3,7 @@ package com.factoriaf5.ecommerceManager.products;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,12 +13,13 @@ public class ProductController {
 
     private final ProductService productService;
 
+
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Product> createProduct(@ModelAttribute ProductRequest productRequest){
         Product savedProduct = productService.saveProduct(productRequest);
         return ResponseEntity.status(201).body(savedProduct);
     }
@@ -41,7 +43,7 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Optional<Product>> updateProduct(@RequestBody ProductRequest productRequest, @PathVariable Long id){
+    public ResponseEntity<Optional<Product>> updateProduct(@ModelAttribute ProductRequest productRequest, @PathVariable Long id) throws IOException {
         Optional<Product> updatedProduct = productService.updateProduct(productRequest,id);
         return ResponseEntity.status(200).body(updatedProduct);
     }
