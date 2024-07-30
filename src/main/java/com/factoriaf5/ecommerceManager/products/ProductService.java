@@ -3,9 +3,6 @@ package com.factoriaf5.ecommerceManager.products;
 import com.factoriaf5.ecommerceManager.files.FileStorageService;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,8 +11,6 @@ public class ProductService {
 
     private final ProductRepo productRepo;
     private final FileStorageService fileStorageService;
-
-    private static final String IMAGE_DIRECTORY = "uploads/images/";
 
 
     public ProductService(ProductRepo productRepo, FileStorageService fileStorageService) {
@@ -48,37 +43,36 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
-        productRepo.deleteById(id);
+        Optional<Product> productToDelete = Optional.ofNullable(productRepo.findById(id).orElse(null));
+        if (productToDelete != null) {
+            String imageToBeDeletedPath = productToDelete.get().getImageUrl();
+            // Delete the image file
+            fileStorageService.fileDelete(imageToBeDeletedPath);
+            // Delete the product
+            productRepo.deleteById(id);
+        }
     }
 
-    public Optional<Product> updateProduct(ProductRequest productRequest, Long id) throws IOException {
+    public Optional<Product> updateProduct(ProductRequest productRequest, Long id) {
+        String imageUrl = fileStorageService.fileStore(productRequest.image());
         Optional<Product> returnedProduct = productRepo.findById(id);
+
         if (returnedProduct.isEmpty()) {
             throw new ProductNotFoundException("The product with id: " + id + " is not found");
         }
 
         Product updatedProduct = returnedProduct.get();
 
-        if (productRequest.image().isEmpty()) {
-            Path path = null;
-        }
-        byte[] bytes = productRequest.image().getBytes();
-        Path path = Path.of(IMAGE_DIRECTORY + productRequest.image().getOriginalFilename());
-
-        // Create directories if they do not exist
-        Files.createDirectories(path.getParent());
-
-        Files.write(path, bytes);
-        String imagePath = path.toString();
-
         updatedProduct.setName(productRequest.name());
         updatedProduct.setDescription(productRequest.description());
         updatedProduct.setPrice(productRequest.price());
         updatedProduct.setFeatured(productRequest.featured());
-        updatedProduct.setImage(imagePath);
+        updatedProduct.setImage(imageUrl);
 
         return Optional.of(productRepo.save(updatedProduct));
     }
 
-
+    public List<Product> getFeaturedProducts() {
+        return productRepo.findByFeaturedTrue();
+    }
 }

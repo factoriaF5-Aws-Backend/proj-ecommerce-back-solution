@@ -36,4 +36,14 @@ public class FileStorageService {
             throw new RuntimeException("Problem uploading file:" + e);
         }
     }
+
+    public void fileDelete(String fileUrl) {
+        try {
+            String imageName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+            Path filePath = Path.of(IMAGE_DIRECTORY + imageName);
+            Files.delete(filePath);
+        } catch (IOException e) {
+            return;
+        }
+    }
 }

@@ -80,4 +80,5 @@ public class Product {
     public void setImage(String imagePath) {
         this.imageUrl = imagePath;
     }
+
 }

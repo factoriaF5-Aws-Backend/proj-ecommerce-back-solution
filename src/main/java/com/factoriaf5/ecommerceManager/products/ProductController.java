@@ -3,12 +3,13 @@ package com.factoriaf5.ecommerceManager.products;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 @RestController
 @RequestMapping("api/products")
+//To solve CORS problem with the frontend
+@CrossOrigin("*")
 public class ProductController {
 
     private final ProductService productService;
@@ -43,10 +44,15 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Optional<Product>> updateProduct(@ModelAttribute ProductRequest productRequest, @PathVariable Long id) throws IOException {
+    public ResponseEntity<Optional<Product>> updateProduct(@ModelAttribute ProductRequest productRequest, @PathVariable Long id) {
         Optional<Product> updatedProduct = productService.updateProduct(productRequest,id);
         return ResponseEntity.status(200).body(updatedProduct);
     }
 
+    @GetMapping(value = "/featured")
+    public ResponseEntity<List<Product>> listFeaturedProducts() {
+        List<Product> listOfProducts = productService.getFeaturedProducts();
+        return ResponseEntity.status(200).body(listOfProducts);
+    }
 
 }
