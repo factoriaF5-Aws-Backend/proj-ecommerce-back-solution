@@ -15,8 +15,9 @@ public class Product {
     private String description;
     private Double price;
     private Boolean featured = false;
+    private String imageUrl;
 
-    public Product(String name, String description, Double price, Boolean featured) {
+    public Product(String name, String description, Double price, Boolean featured, String imageUrl) {
         this.name = name;
         this.description = description;
         if (price < 0) {
@@ -24,10 +25,11 @@ public class Product {
         }
         this.price = price;
         this.featured = featured;
+        this.imageUrl = imageUrl;
     }
 
-    public Product(Long id, String name, String description, Double price, Boolean featured) {
-        this(name, description, price, featured);
+    public Product(Long id, String name, String description, Double price, Boolean featured, String imageUrl) {
+        this(name, description, price, featured, imageUrl);
         this.id = id;
     }
 
@@ -55,6 +57,10 @@ public class Product {
         return featured;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -71,5 +77,8 @@ public class Product {
         this.featured = featured;
     }
 
+    public void setImage(String imagePath) {
+        this.imageUrl = imagePath;
+    }
 
 }

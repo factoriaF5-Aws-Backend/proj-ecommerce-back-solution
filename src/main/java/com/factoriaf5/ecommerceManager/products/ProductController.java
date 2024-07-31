@@ -8,16 +8,19 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/products")
+//To solve CORS problem with the frontend
+@CrossOrigin("*")
 public class ProductController {
 
     private final ProductService productService;
+
 
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
     @PostMapping
-    public ResponseEntity<Product> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<Product> createProduct(@ModelAttribute ProductRequest productRequest){
         Product savedProduct = productService.saveProduct(productRequest);
         return ResponseEntity.status(201).body(savedProduct);
     }
@@ -41,10 +44,15 @@ public class ProductController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Optional<Product>> updateProduct(@RequestBody ProductRequest productRequest, @PathVariable Long id){
+    public ResponseEntity<Optional<Product>> updateProduct(@ModelAttribute ProductRequest productRequest, @PathVariable Long id) {
         Optional<Product> updatedProduct = productService.updateProduct(productRequest,id);
         return ResponseEntity.status(200).body(updatedProduct);
     }
 
+    @GetMapping(value = "/featured")
+    public ResponseEntity<List<Product>> listFeaturedProducts() {
+        List<Product> listOfProducts = productService.getFeaturedProducts();
+        return ResponseEntity.status(200).body(listOfProducts);
+    }
 
 }

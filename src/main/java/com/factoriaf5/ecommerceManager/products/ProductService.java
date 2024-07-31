@@ -1,5 +1,6 @@
 package com.factoriaf5.ecommerceManager.products;
 
+import com.factoriaf5.ecommerceManager.files.FileStorageService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,14 +10,23 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepo productRepo;
+    private final FileStorageService fileStorageService;
 
-    public ProductService(ProductRepo productRepo) {
+
+    public ProductService(ProductRepo productRepo, FileStorageService fileStorageService) {
         this.productRepo = productRepo;
+        this.fileStorageService = fileStorageService;
     }
 
     public Product saveProduct(ProductRequest productRequest) {
-        Product product = new Product(productRequest.name(), productRequest.description(), productRequest.price(), productRequest.featured());
-
+        String imageUrl = fileStorageService.fileStore(productRequest.image());
+        Product product = new Product(
+                productRequest.name(),
+                productRequest.description(),
+                productRequest.price(),
+                productRequest.featured(),
+                imageUrl
+        );
         return productRepo.save(product);
     }
 
@@ -33,11 +43,20 @@ public class ProductService {
     }
 
     public void deleteProduct(Long id) {
-        productRepo.deleteById(id);
+        Optional<Product> productToDelete = Optional.ofNullable(productRepo.findById(id).orElse(null));
+        if (productToDelete != null) {
+            String imageToBeDeletedPath = productToDelete.get().getImageUrl();
+            // Delete the image file
+            fileStorageService.fileDelete(imageToBeDeletedPath);
+            // Delete the product
+            productRepo.deleteById(id);
+        }
     }
 
     public Optional<Product> updateProduct(ProductRequest productRequest, Long id) {
+        String imageUrl = fileStorageService.fileStore(productRequest.image());
         Optional<Product> returnedProduct = productRepo.findById(id);
+
         if (returnedProduct.isEmpty()) {
             throw new ProductNotFoundException("The product with id: " + id + " is not found");
         }
@@ -48,7 +67,12 @@ public class ProductService {
         updatedProduct.setDescription(productRequest.description());
         updatedProduct.setPrice(productRequest.price());
         updatedProduct.setFeatured(productRequest.featured());
+        updatedProduct.setImage(imageUrl);
 
         return Optional.of(productRepo.save(updatedProduct));
+    }
+
+    public List<Product> getFeaturedProducts() {
+        return productRepo.findByFeaturedTrue();
     }
 }
