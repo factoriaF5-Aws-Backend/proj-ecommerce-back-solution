@@ -1,6 +1,10 @@
 package com.factoriaf5.ecommerceManager.users;
 
+import com.factoriaf5.ecommerceManager.reviews.Review;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -12,6 +16,9 @@ public class User {
     private String userName;
     private String email;
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final Set<Review> reviews = new HashSet<>();
 
 
     public User(String userName, String email, String password) {
@@ -43,5 +50,6 @@ public class User {
     public String getPassword() {
         return password;
     }
+
 
 }
