@@ -30,8 +30,7 @@ public class UserService {
             throw new RuntimeException("The user " + userName + " is not found");
         }
         //TODO test if user not found
-        User returnedUser = userRepo.findByUserName(userName);
-        return returnedUser;
+        return userRepo.findByUserName(userName);
     }
 
 }
