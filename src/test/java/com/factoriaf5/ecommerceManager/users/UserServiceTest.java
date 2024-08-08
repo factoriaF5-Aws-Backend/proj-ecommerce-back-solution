@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -54,5 +55,18 @@ public class UserServiceTest {
         User userResponse = userService.findUser("test");
 
         assertEquals(registeredUser, userResponse);
+    }
+
+    @Test
+    void testUserCanNotBeRetrievedException(){
+        Mockito.when(userRepo.findByUserName("test")).thenReturn(null);
+        Exception exception = assertThrows(RuntimeException.class, () -> userService.findUser("test"));
+
+        String expectedMessage = "The user test is not found";
+
+        assertEquals(expectedMessage, exception.getMessage());
+
+        verify(userRepo, Mockito.times(1)).findByUserName(any(String.class));
+
     }
 }

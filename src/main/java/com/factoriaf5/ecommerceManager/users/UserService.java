@@ -13,7 +13,7 @@ public class UserService {
 
 
     public User saveUser(UserRequest userRequest) {
-        if(userRepo.findByUserName(userRequest.userName()) != null){
+        if (userRepo.findByUserName(userRequest.userName()) != null) {
             throw new UserAlreadyRegisterException("User already registered");
         }
         User user = new User(
@@ -24,9 +24,12 @@ public class UserService {
         );
         return userRepo.save(user);
     }
-
     public User findUser(String userName) {
-        User returnedUser = userRepo.findByUserName(userName);
-        return returnedUser;
+        if (userRepo.findByUserName(userName) == null) {
+            throw new RuntimeException("The user " + userName + " is not found");
+        }
+        //TODO test if user not found
+        return userRepo.findByUserName(userName);
     }
+
 }
