@@ -24,7 +24,6 @@ public class UserService {
         );
         return userRepo.save(user);
     }
-
     public User findUser(String userName) {
         if (userRepo.findByUserName(userName) == null) {
             throw new RuntimeException("The user " + userName + " is not found");
