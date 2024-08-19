@@ -55,4 +55,10 @@ public class ProductController {
         return ResponseEntity.status(200).body(listOfProducts);
     }
 
+    @GetMapping(value = "/categories/{category}")
+    public ResponseEntity<List<Product>> listProductsByCategory(@PathVariable String category){
+        List<Product> listOfProducts = productService.getProductsByCategory(category);
+        return ResponseEntity.status(200).body(listOfProducts);
+    }
+
 }

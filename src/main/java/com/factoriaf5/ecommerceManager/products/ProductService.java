@@ -25,7 +25,8 @@ public class ProductService {
                 productRequest.description(),
                 productRequest.price(),
                 productRequest.featured(),
-                imageUrl
+                imageUrl,
+                productRequest.category()
         );
         return productRepo.save(product);
     }
@@ -50,6 +51,8 @@ public class ProductService {
             fileStorageService.fileDelete(imageToBeDeletedPath);
             // Delete the product
             productRepo.deleteById(id);
+        } else {
+            throw new RuntimeException("The product with id: " + id + " is not found");
         }
     }
 
@@ -68,11 +71,16 @@ public class ProductService {
         updatedProduct.setPrice(productRequest.price());
         updatedProduct.setFeatured(productRequest.featured());
         updatedProduct.setImage(imageUrl);
+        updatedProduct.setCategory(productRequest.category());
 
         return Optional.of(productRepo.save(updatedProduct));
     }
 
     public List<Product> getFeaturedProducts() {
         return productRepo.findByFeaturedTrue();
+    }
+
+    public List<Product> getProductsByCategory(String category) {
+        return productRepo.findByCategory(category);
     }
 }

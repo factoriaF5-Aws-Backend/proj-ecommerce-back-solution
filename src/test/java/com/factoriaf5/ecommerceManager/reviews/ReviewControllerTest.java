@@ -39,7 +39,7 @@ public class ReviewControllerTest {
     @Test
     void createReview() throws Exception{
         User user = new User(1L, "user", "password", "user@email.com");
-        Product product = new Product(1L, "product", "description", 1.0, true, "url");
+        Product product = new Product(1L, "product", "description", 1.0, true, "url", "category");
         ReviewRequest reviewRequest = new ReviewRequest("a new product", 4.0, user.getUserName(), product.getId());
 
         userRepo.save(user);
@@ -63,7 +63,7 @@ public class ReviewControllerTest {
     @Test
     void findAllReviewsPerProduct() throws Exception {
         User user = new User(1L, "user", "password", "user@email.com");
-        Product product = new Product(1L, "product", "description", 1.0, true, "url");
+        Product product = new Product(1L, "product", "description", 1.0, true, "url", "category");
 
         userRepo.save(user);
         productRepo.save(product);
@@ -88,7 +88,7 @@ public class ReviewControllerTest {
     @Test
     void findReviewByProductIdAndUserUserName() throws Exception {
         User user = new User(1L, "user", "password", "user@email.com");
-        Product product = new Product(1L, "product", "description", 1.0, true, "url");
+        Product product = new Product(1L, "product", "description", 1.0, true, "url", "category");
 
         userRepo.save(user);
         productRepo.save(product);

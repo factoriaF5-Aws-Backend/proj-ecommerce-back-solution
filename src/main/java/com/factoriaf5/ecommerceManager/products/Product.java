@@ -17,11 +17,12 @@ public class Product {
     private Double price;
     private Boolean featured = false;
     private String imageUrl;
+    private String category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private final Set<Review> reviews = new HashSet<>();
 
-    public Product(String name, String description, Double price, Boolean featured, String imageUrl) {
+    public Product(String name, String description, Double price, Boolean featured, String imageUrl, String category) {
         this.name = name;
         this.description = description;
         if (price < 0) {
@@ -30,10 +31,12 @@ public class Product {
         this.price = price;
         this.featured = featured;
         this.imageUrl = imageUrl;
+        this.category = category;
     }
 
-    public Product(Long id, String name, String description, Double price, Boolean featured, String imageUrl) {
-        this(name, description, price, featured, imageUrl);
+
+    public Product(Long id, String name, String description, Double price, Boolean featured, String imageUrl, String category) {
+        this(name, description, price, featured, imageUrl, category);
         this.id = id;
     }
 
@@ -65,6 +68,10 @@ public class Product {
         return imageUrl;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -85,4 +92,7 @@ public class Product {
         this.imageUrl = imagePath;
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
 }

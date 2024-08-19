@@ -8,7 +8,8 @@ public record ProductRequest(
         String description,
         Double price,
         Boolean featured,
-        MultipartFile image
+        MultipartFile image,
+        String category
 ) {
 
 }

@@ -8,6 +8,7 @@ public class EcommerceManagerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EcommerceManagerApplication.class, args);
+		//Command line runner to make a user fake auth
 	}
 
 }

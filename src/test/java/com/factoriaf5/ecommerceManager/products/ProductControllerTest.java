@@ -51,8 +51,8 @@ class ProductControllerTest {
         mockedUUID.when(UUID::randomUUID).thenReturn(uuid);
 
         this.mockImage = mock(MockMultipartFile.class);
-        this.productRequest = new ProductRequest("test", "test", 1.0, true, mockImage);
-        this.savedProduct = new Product(1L, "test", "test", 1.0, true, IMAGE_URL + uuid.toString() + ".");
+        this.productRequest = new ProductRequest("test", "test", 1.0, true, mockImage, "test");
+        this.savedProduct = new Product(1L, "test", "test", 1.0, true, IMAGE_URL + uuid.toString() + ".", "test");
         this.localDirectory = IMAGE_DIRECTORY + uuid.toString() + ".";
     }
 
@@ -73,14 +73,16 @@ class ProductControllerTest {
                         .param("name", "name")
                         .param("description", "description")
                         .param("price", "10.0")
-                        .param("featured", "true"))
+                        .param("featured", "true")
+                        .param("category", "category"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("id").value(1))
                 .andExpect(jsonPath("name").value("name"))
                 .andExpect(jsonPath("description").value("description"))
                 .andExpect(jsonPath("price").value(10.0))
                 .andExpect(jsonPath("featured").value(true))
-                .andExpect(jsonPath("imageUrl").value(IMAGE_URL + uuid.toString() + "."));
+                .andExpect(jsonPath("imageUrl").value(IMAGE_URL + uuid.toString() + "."))
+                .andExpect(jsonPath("category").value("category"));
 
         //Assert that the image stored locally
         assertTrue(Files.exists(Path.of(localDirectory)));
@@ -104,7 +106,8 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$[0].description").value(savedProduct.getDescription()))
                 .andExpect(jsonPath("$[0].price").value(savedProduct.getPrice()))
                 .andExpect(jsonPath("$[0].featured").value(savedProduct.getFeatured()))
-                .andExpect(jsonPath("$[0].imageUrl").value(savedProduct.getImageUrl()));
+                .andExpect(jsonPath("$[0].imageUrl").value(savedProduct.getImageUrl()))
+                .andExpect(jsonPath("$[0].category").value(savedProduct.getCategory()));
         mockedUUID.close();
     }
 
@@ -119,7 +122,8 @@ class ProductControllerTest {
                 .andExpect(jsonPath("description").value(savedProduct.getDescription()))
                 .andExpect(jsonPath("price").value(savedProduct.getPrice()))
                 .andExpect(jsonPath("featured").value(savedProduct.getFeatured()))
-                .andExpect(jsonPath("imageUrl").value(savedProduct.getImageUrl()));
+                .andExpect(jsonPath("imageUrl").value(savedProduct.getImageUrl()))
+                .andExpect(jsonPath("category").value(savedProduct.getCategory()));
         mockedUUID.close();
     }
 
@@ -141,7 +145,7 @@ class ProductControllerTest {
     void updateAProduct() throws Exception {
         productRepo.save(savedProduct);
         ProductRequest productRequest;
-        productRequest = new ProductRequest("updated name", "updated description", 2.0, true, mockImage);
+        productRequest = new ProductRequest("updated name", "updated description", 2.0, true, mockImage, "updated category");
 
         mockMvc.perform(MockMvcRequestBuilders.multipart(HttpMethod.PUT, "/api/products/1")
                         .file(new MockMultipartFile("image", "bytes".getBytes()))
@@ -149,13 +153,15 @@ class ProductControllerTest {
                         .param("name", "updated name")
                         .param("description", "updated description")
                         .param("price", "2.0")
-                        .param("featured", "true"))
+                        .param("featured", "true")
+                        .param("category", "updated category"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(1))
                 .andExpect(jsonPath("name").value(productRequest.name()))
                 .andExpect(jsonPath("description").value(productRequest.description()))
                 .andExpect(jsonPath("price").value(productRequest.price()))
-                .andExpect(jsonPath("featured").value(productRequest.featured()));
+                .andExpect(jsonPath("featured").value(productRequest.featured()))
+                .andExpect(jsonPath("category").value(productRequest.category()));
 
         //Assert that the image stored locally
         assertTrue(Files.exists(Path.of(localDirectory)));
@@ -177,7 +183,23 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$[0].description").value(savedProduct.getDescription()))
                 .andExpect(jsonPath("$[0].price").value(savedProduct.getPrice()))
                 .andExpect(jsonPath("$[0].featured").value(true))
-                .andExpect(jsonPath("$[0].imageUrl").value(savedProduct.getImageUrl()));
+                .andExpect(jsonPath("$[0].imageUrl").value(savedProduct.getImageUrl()))
+                .andExpect(jsonPath("$[0].category").value(savedProduct.getCategory()));
+        mockedUUID.close();
+    }
+
+    @Test
+    void listProductsByCategory() throws Exception {
+        productRepo.save(savedProduct);
+        mockMvc.perform(get("/api/products/categories/test")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value(savedProduct.getName()))
+                .andExpect(jsonPath("$[0].description").value(savedProduct.getDescription()))
+                .andExpect(jsonPath("$[0].price").value(savedProduct.getPrice()))
+                .andExpect(jsonPath("$[0].featured").value(savedProduct.getFeatured()))
+                .andExpect(jsonPath("$[0].imageUrl").value(savedProduct.getImageUrl()))
+                .andExpect(jsonPath("$[0].category").value(savedProduct.getCategory()));
         mockedUUID.close();
     }
 }

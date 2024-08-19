@@ -42,7 +42,7 @@ public class ReviewServiceTest {
     @BeforeEach
     void setUp() {
         user = new User(1L, "user", "email", "password");
-        product = new Product(1L, "test", "test", 1.0, true, "http://localhost:8080/uploads/images/test.jpg");
+        product = new Product(1L, "test", "test", 1.0, true, "http://localhost:8080/uploads/images/test.jpg", "test");
         reviewRequest = new ReviewRequest("body", 5.0, user.getUserName(), 1L);
         savedReview = new Review(1L, "body", 5.0, user, product);
 
