@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface ProductRepo extends JpaRepository<Product, Long> {
     List<Product> findByFeaturedTrue();
+
+    List<Product> findByCategory(String category);
 }

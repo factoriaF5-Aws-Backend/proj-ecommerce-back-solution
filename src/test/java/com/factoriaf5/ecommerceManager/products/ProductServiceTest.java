@@ -36,8 +36,8 @@ class ProductServiceTest {
     @BeforeEach
     public void beforeEachTest(){
         this.mockImage = mock(MultipartFile.class);
-        this.productRequest = new ProductRequest("test", "test", 1.0, true, mockImage);
-        this.savedProduct = new Product(1L, "test", "test", 1.0, true, "http://localhost:8080/uploads/images/test.jpg");
+        this.productRequest = new ProductRequest("test", "test", 1.0, true, mockImage, "test");
+        this.savedProduct = new Product(1L, "test", "test", 1.0, true, "http://localhost:8080/uploads/images/test.jpg", "test");
     }
     @Test
     void testCreateProduct() {
@@ -60,7 +60,7 @@ class ProductServiceTest {
 
     @Test
     void testThatPriceCanNotBeNegative() {
-        ProductRequest productRequest = new ProductRequest("test", "test", -1.0, true, mockImage);
+        ProductRequest productRequest = new ProductRequest("test", "test", -1.0, true, mockImage, "test");
 
         Exception exception = assertThrows(NegativePriceException.class, () -> productService.saveProduct(productRequest));
 
@@ -117,7 +117,7 @@ class ProductServiceTest {
         Mockito.when(productRepo.findById(1L)).thenReturn(Optional.of(savedProduct));
         Mockito.when(productRepo.save(any(Product.class))).thenReturn(savedProduct);
 
-        ProductRequest productRequest = new ProductRequest("updated", "updated", 2.0, false, mockImage);
+        ProductRequest productRequest = new ProductRequest("updated", "updated", 2.0, false, mockImage, "updated");
 
         Optional<Product> optionalProduct = productService.updateProduct(productRequest, 1L);
 
@@ -135,6 +135,16 @@ class ProductServiceTest {
 
         Mockito.when(productRepo.findByFeaturedTrue()).thenReturn(listOfProducts);
         List<Product> productResponse = productService.getFeaturedProducts();
+
+        assertEquals(listOfProducts, productResponse);
+    }
+
+    @Test
+    void testThatListOfProductsCanBeRetrievedByCategory(){
+        List<Product> listOfProducts = List.of(savedProduct);
+
+        Mockito.when(productRepo.findByCategory(savedProduct.getCategory())).thenReturn(listOfProducts);
+        List<Product> productResponse = productService.getProductsByCategory(savedProduct.getCategory());
 
         assertEquals(listOfProducts, productResponse);
     }
