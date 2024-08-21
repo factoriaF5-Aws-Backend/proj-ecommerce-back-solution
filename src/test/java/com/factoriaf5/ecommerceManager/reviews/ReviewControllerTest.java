@@ -38,11 +38,9 @@ public class ReviewControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
     @Test
     void createReview() throws Exception{
-        User user = new User(1L, "user", "password", "user@email.com");
         Product product = new Product(1L, "product", "description", 1.0, true, "url", "category");
-        ReviewRequest reviewRequest = new ReviewRequest("a new product", 4.0, user.getUserName(), product.getId());
+        ReviewRequest reviewRequest = new ReviewRequest("a new product", 4.0, "", product.getId());
 
-        userRepo.save(user);
         productRepo.save(product);
 
         String reviewRequestJson = objectMapper.writeValueAsString(reviewRequest);
@@ -53,8 +51,6 @@ public class ReviewControllerTest {
                 .andExpect(jsonPath("id").value(1L))
                 .andExpect(jsonPath("body").value("a new product"))
                 .andExpect(jsonPath("rating").value(4.0))
-                .andExpect(jsonPath("$.user.userName").value(user.getUserName()))
-                .andExpect(jsonPath("$.user.password").value(user.getPassword()))
                 .andExpect(jsonPath("$.product.id").value(product.getId()))
                 .andExpect(jsonPath("$.product.name").value(product.getName()))
         ;

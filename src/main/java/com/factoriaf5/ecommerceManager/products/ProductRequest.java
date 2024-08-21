@@ -9,6 +9,7 @@ public record ProductRequest(
         Double price,
         Boolean featured,
         MultipartFile image,
+        //TODO modify to work with category_id
         String category
 ) {
 

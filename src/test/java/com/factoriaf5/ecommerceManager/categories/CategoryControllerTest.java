@@ -1,16 +1,12 @@
 package com.factoriaf5.ecommerceManager.categories;
 
-import com.factoriaf5.ecommerceManager.products.ProductRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -83,17 +79,17 @@ class CategoryControllerTest {
         assertEquals(0, categoryRepository.count());
     }
 
-//    @Test
-//    void can_update_a_category() throws Exception {
-//        Category savedCategory = new Category("category");
-//        categoryRepository.save(savedCategory);
-//
-//        // Perform the update request
-//        mockMvc.perform(put("/api/categories/" + savedCategory.getId())  // Assuming the update endpoint is a PUT request to /api/categories/{id}
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content("{\"name\": \"updated name\"}"))  // JSON body for updating the name
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id").value(savedCategory.getId()))
-//                .andExpect(jsonPath("$.name").value("updated name"));
-//    }
+    @Test
+    void can_update_a_category() throws Exception {
+        Category savedCategory = new Category("category");
+        categoryRepository.save(savedCategory);
+
+        // Perform the update request
+        mockMvc.perform(put("/api/categories/" + savedCategory.getId())  // Assuming the update endpoint is a PUT request to /api/categories/{id}
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"name\": \"updated name\"}"))  // JSON body for updating the name
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(savedCategory.getId()))
+                .andExpect(jsonPath("$.name").value("updated name"));
+    }
 }

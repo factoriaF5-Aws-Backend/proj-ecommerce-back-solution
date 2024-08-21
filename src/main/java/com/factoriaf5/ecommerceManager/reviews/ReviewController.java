@@ -1,6 +1,7 @@
 package com.factoriaf5.ecommerceManager.reviews;
 
-import com.factoriaf5.ecommerceManager.users.UserService;
+import com.factoriaf5.ecommerceManager.users.User;
+import com.factoriaf5.ecommerceManager.users.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,9 @@ import java.util.List;
 public class ReviewController {
     @Autowired
     ReviewService reviewService;
+
+    @Autowired
+    UserRepo userRepo;
 
     @GetMapping("/{productId}")
     public List<Review> listAllReviewsByProductId(@PathVariable Long productId) {
@@ -25,7 +29,13 @@ public class ReviewController {
 
     @PostMapping
     public ResponseEntity<Review> createReview(@RequestBody ReviewRequest reviewRequest) {
-        Review createdReview = reviewService.saveReview(reviewRequest);
+        User authUser = userRepo.findByUserName("admin");
+        ReviewRequest createdReviewRequest = new ReviewRequest(
+                reviewRequest.body(),
+                reviewRequest.rating(),
+                authUser.getUserName(),
+                reviewRequest.product_Id());
+        Review createdReview = reviewService.saveReview(createdReviewRequest);
         return ResponseEntity.status(201).body(createdReview);
     }
 
