@@ -24,7 +24,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<Category>> listCategories(){
-        return ResponseEntity.status(200).body((List<Category>) categoryService.findAll());
+        return ResponseEntity.status(200).body(categoryService.findAll());
     }
 
     @GetMapping("/{id}")
@@ -38,7 +38,7 @@ public class CategoryController {
         return ResponseEntity.status(200).body("Category with id: " + id + " is deleted");
     }
 
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Optional<Category>> updateCategory(@RequestBody CategoryRequest categoryRequest, @PathVariable Long id){
         Optional<Category> updatedCategory = (Optional<Category>) categoryService.updateCategory(categoryRequest,id);
 

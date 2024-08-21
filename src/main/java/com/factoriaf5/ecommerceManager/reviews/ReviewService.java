@@ -2,8 +2,7 @@ package com.factoriaf5.ecommerceManager.reviews;
 
 import com.factoriaf5.ecommerceManager.products.Product;
 import com.factoriaf5.ecommerceManager.products.ProductService;
-import com.factoriaf5.ecommerceManager.users.User;
-import com.factoriaf5.ecommerceManager.users.UserService;
+import com.factoriaf5.ecommerceManager.users.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,28 +13,28 @@ public class ReviewService {
     @Autowired
     ReviewRepo reviewRepo;
     @Autowired
-    UserService userService;
-    @Autowired
     ProductService productService;
+
+    @Autowired
+    UserRepo userRepo;
 
     public List<Review> findAllReviewsPerProduct(Long productId) {
         return reviewRepo.findAllByProductId(productId);
     }
 
     public Review saveReview(ReviewRequest reviewRequest) {
-        User user = userService.findUser(reviewRequest.app_user_userName());
         Product product = productService.findProduct(reviewRequest.product_Id());
 
-        List<Review> checkForReviews = reviewRepo.findByProductIdAndUserUserName(product.getId(), user.getUserName());
+        List<Review> checkForReviews = reviewRepo.findByProductIdAndUserUserName(product.getId(), reviewRequest.app_user_userName());
 
-        if (!checkForReviews.isEmpty()) {
+        if (checkForReviews.size() != 0) {
             throw new RuntimeException("The user can only make one review, you already added a review");
         }
 
         Review review = new Review(
                 reviewRequest.body(),
                 reviewRequest.rating(),
-                user,
+                userRepo.findByUserName(reviewRequest.app_user_userName()),
                 product
         );
         return reviewRepo.save(review);

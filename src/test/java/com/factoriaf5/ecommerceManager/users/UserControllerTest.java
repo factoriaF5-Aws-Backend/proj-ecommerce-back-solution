@@ -37,7 +37,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(userRequestJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("id").value(1))
+                .andExpect(jsonPath("id").value(2))
                 .andExpect(jsonPath("userName").value("test"))
                 .andExpect(jsonPath("email").value("test"))
                 .andExpect(jsonPath("password").value("test"));

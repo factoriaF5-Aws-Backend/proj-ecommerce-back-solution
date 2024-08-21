@@ -8,17 +8,13 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/products")
-//To solve CORS problem with the frontend
-@CrossOrigin("*")
+@CrossOrigin("*")//To solve CORS problem with the frontend
 public class ProductController {
-
+//TODO check if the category exists
     private final ProductService productService;
-
-
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
-
     @PostMapping
     public ResponseEntity<Product> createProduct(@ModelAttribute ProductRequest productRequest){
         Product savedProduct = productService.saveProduct(productRequest);
