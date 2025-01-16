@@ -11,11 +11,13 @@ public class ProductService {
 
     private final ProductRepo productRepo;
     private final FileStorageService fileStorageService;
+    private final ProductCustomRepo productCustomRepo;
 
 
-    public ProductService(ProductRepo productRepo, FileStorageService fileStorageService) {
+    public ProductService(ProductRepo productRepo, FileStorageService fileStorageService, ProductCustomRepo productCustomRepo) {
         this.productRepo = productRepo;
         this.fileStorageService = fileStorageService;
+        this.productCustomRepo = productCustomRepo;
     }
 
     public Product saveProduct(ProductRequest productRequest) {
@@ -76,11 +78,23 @@ public class ProductService {
         return Optional.of(productRepo.save(updatedProduct));
     }
 
-    public List<Product> getFeaturedProducts() {
-        return productRepo.findByFeaturedTrue();
+    //public List<Product> getProductsByCategory(String category) {
+    //    return productRepo.findProductsByCategory(category);
+    //}
+
+    public Product getProductByName(String name){
+        return productRepo.findProductsByName(name);
     }
 
-    public List<Product> getProductsByCategory(String category) {
-        return productRepo.findByCategory(category);
+    public List<Product> getProductsByPriceRange(double minPrice, double maxPrice) {
+        return productRepo.findByPriceRange(minPrice, maxPrice);
+    }
+
+    public List<Product> getFeaturedProducts() {
+        return productRepo.findFeaturedProducts();
+    }
+
+    public List<Product> getFeaturedProductsByCategory(String categoryName) {
+        return productCustomRepo.findFeaturedProductsByCategory(categoryName);
     }
 }

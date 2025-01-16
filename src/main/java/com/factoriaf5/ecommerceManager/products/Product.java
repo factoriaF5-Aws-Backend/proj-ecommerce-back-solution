@@ -8,6 +8,7 @@ import java.util.Set;
 
 
 @Entity
+@NamedQuery(name = "Product.findByName", query = "SELECT p FROM Product p WHERE p.name = :name")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
