@@ -45,16 +45,26 @@ public class ProductController {
         return ResponseEntity.status(200).body(updatedProduct);
     }
 
-    @GetMapping(value = "/featured")
-    public ResponseEntity<List<Product>> listFeaturedProducts() {
-        List<Product> listOfProducts = productService.getFeaturedProducts();
-        return ResponseEntity.status(200).body(listOfProducts);
+
+    @GetMapping(value = "/name/{name}")
+    public ResponseEntity<Product> getProduct(@PathVariable String name){
+        Product product = productService.getProductByName(name);
+        return ResponseEntity.status(200).body(product);
     }
 
-    @GetMapping(value = "/categories/{category}")
-    public ResponseEntity<List<Product>> listProductsByCategory(@PathVariable String category){
-        List<Product> listOfProducts = productService.getProductsByCategory(category);
-        return ResponseEntity.status(200).body(listOfProducts);
+    @GetMapping("/price-range")
+    public List<Product> getProductsByPriceRange(@RequestParam double minPrice, @RequestParam double maxPrice) {
+        return productService.getProductsByPriceRange(minPrice, maxPrice);
+    }
+
+    @GetMapping("/featured")
+    public List<Product> getFeaturedProducts() {
+        return productService.getFeaturedProducts();
+    }
+
+    @GetMapping("/category/{categoryName}/featured")
+    public List<Product> getFeaturedProductsByCategory(@PathVariable String categoryName) {
+        return productService.getFeaturedProductsByCategory(categoryName);
     }
 
 }
